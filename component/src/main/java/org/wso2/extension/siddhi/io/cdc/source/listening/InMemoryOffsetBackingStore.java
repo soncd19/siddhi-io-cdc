@@ -18,12 +18,12 @@
 
 package org.wso2.extension.siddhi.io.cdc.source.listening;
 
-import org.wso2.extension.siddhi.io.cdc.source.CDCSource;
-import org.wso2.extension.siddhi.io.cdc.util.CDCSourceConstants;
 import org.apache.kafka.connect.runtime.WorkerConfig;
 import org.apache.kafka.connect.storage.MemoryOffsetBackingStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wso2.extension.siddhi.io.cdc.source.CDCSource;
+import org.wso2.extension.siddhi.io.cdc.util.CDCSourceConstants;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;

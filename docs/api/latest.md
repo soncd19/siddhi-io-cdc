@@ -1,18 +1,14 @@
-# API Docs - v2.0.5
+# API Docs - v2.0.0
 
 ## Source
 
 ### cdc *<a target="_blank" href="https://wso2.github.io/siddhi/documentation/siddhi-4.0/#source">(Source)</a>*
 
-<p style="word-wrap: break-word">The CDC source receives events when change events (i.e., INSERT, UPDATE, DELETE) are triggered for a database table. Events are received in the 'key-value' format.<br><br>There are two modes you could perform CDC: Listening mode and Polling mode.<br><br>In polling mode, the datasource is periodically polled for capturing the changes. The polling period can be configured.<br>In polling mode, you can only capture INSERT and UPDATE changes.<br><br>On listening mode, the Source will keep listening to the Change Log of the database and notify in case a change has taken place. Here, you are immediately notified about the change, compared to polling mode.<br><br>The key values of the map of a CDC change event are as follows.<br><br>For 'listening' mode: <br>&nbsp;&nbsp;&nbsp;&nbsp;For insert: Keys are specified as columns of the table.<br>&nbsp;&nbsp;&nbsp;&nbsp;For delete: Keys are followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>&nbsp;&nbsp;&nbsp;&nbsp;For update: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br><br>For 'polling' mode: Keys are specified as the columns of the table.#### Preparations required for working with Oracle Databases in listening mode<br><br>Using the extension in Windows, Mac OSX and AIX are pretty straight forward inorder to achieve the required behaviour please follow the steps given below<br><br>&nbsp;&nbsp;- Download the compatible version of oracle instantclient for the database version from [here](https://www.oracle.com/database/technologies/instant-client/downloads.html) and extract<br>&nbsp;&nbsp;- Extract and set the environment variable <code>LD_LIBRARY_PATH</code> to the location of instantclient which was exstracted as shown below<br>&nbsp;&nbsp;<pre>
-    export LD_LIBRARY_PATH=&lt;path to the instant client location&gt;
-  </pre><br>&nbsp;&nbsp;- Inside the instantclient folder which was download there are two jars <code>xstreams.jar</code> and <code>ojdbc&lt;version&gt;.jar</code> convert them to OSGi bundles using the tools which were provided in the <code>&lt;distribution&gt;/bin</code> for converting the <code>ojdbc.jar</code> use the tool <code>spi-provider.sh|bat</code> and for the conversion of <code>xstreams.jar</code> use the jni-provider.sh as shown below(Note: this way of converting Xstreams jar is applicable only for Linux environments for other OSs this step is not required and converting it through the <code>jartobundle.sh</code> tool is enough)<br>&nbsp;&nbsp;<pre>
-    ./jni-provider.sh &lt;input-jar&gt; &lt;destination&gt; &lt;comma seperated native library names&gt;
-  </pre><br>&nbsp;&nbsp;once ojdbc and xstreams jars are converted to OSGi copy the generated jars to the <code>&lt;distribution&gt;/lib</code>. Currently siddhi-io-cdc only supports the oracle database distributions 12 and above<br><br>See parameter: mode for supported databases and change events.</p>
+<p style="word-wrap: break-word">The CDC source receives events when change events (i.e., INSERT, UPDATE, DELETE) are triggered for a database table. Events are received in the 'key-value' format.<br>The key values of the map of a CDC change event are as follows.<br>&nbsp;&nbsp;&nbsp;&nbsp;For insert: Keys are specified as columns of the table.<br>&nbsp;&nbsp;&nbsp;&nbsp;For delete: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>&nbsp;&nbsp;&nbsp;&nbsp;For update: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>For 'polling' mode: Keys are specified as the coloumns of the table.<br>See parameter: mode for supported databases and change events.</p>
 
 <span id="syntax" class="md-typeset" style="display: block; font-weight: bold;">Syntax</span>
 ```
-@source(type="cdc", url="<STRING>", mode="<STRING>", jdbc.driver.name="<STRING>", username="<STRING>", password="<STRING>", pool.properties="<STRING>", datasource.name="<STRING>", table.name="<STRING>", polling.column="<STRING>", polling.interval="<INT>", operation="<STRING>", connector.properties="<STRING>", database.server.id="<STRING>", database.server.name="<STRING>", wait.on.missed.record="<BOOL>", missed.record.waiting.timeout="<INT>", @map(...)))
+@source(type="cdc", url="<STRING>", mode="<STRING>", jdbc.driver.name="<STRING>", username="<STRING>", password="<STRING>", pool.properties="<STRING>", datasource.name="<STRING>", table.name="<STRING>", polling.column="<STRING>", polling.interval="<INT>", operation="<STRING>", connector.properties="<STRING>", database.server.id="<STRING>", database.server.name="<STRING>", @map(...)))
 ```
 
 <span id="query-parameters" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">QUERY PARAMETERS</span>
@@ -91,7 +87,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">polling.column</td>
-        <td style="vertical-align: top; word-wrap: break-word">The column name  that is polled to capture the change data. It is recommended to have a TIMESTAMP field as the 'polling.column' in order to capture the inserts and updates.<br>Numeric auto-incremental fields and char fields can also be used as 'polling.column'. However, note that fields of these types only support insert change capturing, and the possibility of using a char field also depends on how the data is input.<br>**It is required to enter a value for this parameter only when the mode is 'polling'.**</td>
+        <td style="vertical-align: top; word-wrap: break-word">The column name  that is polled to capture the change data. It is recommended to have a TIMESTAMP field as the 'polling.column' in order to capture the inserts and updates.<br>Numeric auto-incremental fields and char fields can also be used as 'polling.column'. However, note that fields of these types only support insert change capturing, and the possibility of using a char field also depends on how the data is input.<br>**It is required to enter a value for this parameter when the mode is 'polling'.**</td>
         <td style="vertical-align: top"><Empty_String></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
@@ -107,7 +103,7 @@
     </tr>
     <tr>
         <td style="vertical-align: top">operation</td>
-        <td style="vertical-align: top; word-wrap: break-word">The change event operation you want to carry out. Possible values are 'insert', 'update' or 'delete'. This parameter is not case sensitive. **It is required to specify a value only when the mode is 'listening'.**<br></td>
+        <td style="vertical-align: top; word-wrap: break-word">The change event operation you want to carry out. Possible values are 'insert', 'update' or 'delete'. It is required to specify a value when the mode is 'listening'.<br>This parameter is not case sensitive.</td>
         <td style="vertical-align: top"></td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">No</td>
@@ -124,7 +120,7 @@
     <tr>
         <td style="vertical-align: top">database.server.id</td>
         <td style="vertical-align: top; word-wrap: break-word">An ID to be used when joining MySQL database cluster to read the bin log. This should be a unique integer between 1 to 2^32. This parameter is applicable only when the mode is 'listening'.</td>
-        <td style="vertical-align: top">Random integer between 5400 and 6400</td>
+        <td style="vertical-align: top">-1</td>
         <td style="vertical-align: top">STRING</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
@@ -134,22 +130,6 @@
         <td style="vertical-align: top; word-wrap: break-word">A logical name that identifies and provides a namespace for the database server. This parameter is applicable only when the mode is 'listening'.</td>
         <td style="vertical-align: top">{host}_{port}</td>
         <td style="vertical-align: top">STRING</td>
-        <td style="vertical-align: top">Yes</td>
-        <td style="vertical-align: top">No</td>
-    </tr>
-    <tr>
-        <td style="vertical-align: top">wait.on.missed.record</td>
-        <td style="vertical-align: top; word-wrap: break-word">Indicates whether the process needs to wait on missing/out-of-order records. <br>When this flag is set to 'true' the process will be held once it identifies a missing record. The missing recrod is identified by the sequence of the polling.column value. This can be used only with number fields and not recommended to use with time values as it will not be sequential.<br>This should be enabled ONLY where the records can be written out-of-order, (eg. concurrent writers) as this degrades the performance.</td>
-        <td style="vertical-align: top">false</td>
-        <td style="vertical-align: top">BOOL</td>
-        <td style="vertical-align: top">Yes</td>
-        <td style="vertical-align: top">No</td>
-    </tr>
-    <tr>
-        <td style="vertical-align: top">missed.record.waiting.timeout</td>
-        <td style="vertical-align: top; word-wrap: break-word">The timeout (specified in seconds) to retry for missing/out-of-order record. This should be used along with the wait.on.missed.record parameter. If the parameter is not set, the process will indefinitely wait for the missing record.</td>
-        <td style="vertical-align: top">-1</td>
-        <td style="vertical-align: top">INT</td>
         <td style="vertical-align: top">Yes</td>
         <td style="vertical-align: top">No</td>
     </tr>
@@ -216,21 +196,4 @@ table.name = 'students',
 define stream inputStream (name string);
 ```
 <p style="word-wrap: break-word">In this example, the CDC source polls the 'students' table for inserts and updates. The polling column is a timestamp field.</p>
-
-<span id="example-7" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 7</span>
-```
-@source(type='cdc', jdbc.driver.name='com.mysql.jdbc.Driver', url='jdbc:mysql://localhost:3306/SimpleDB', username='cdcuser', password='pswd4cdc', table.name='students', mode='polling', polling.column='id', operation='insert', wait.on.missed.record='true', missed.record.waiting.timeout='10',
-@map(type='keyvalue'), 
-@attributes(batch_no='batch_no', item='item', qty='qty'))
-define stream inputStream (id int, name string);
-```
-<p style="word-wrap: break-word">In this example, the CDC source polls the 'students' table for inserts. The polling column is a numeric field. This source expects the records in the database to be written concurrently/out-of-order so it waits if it encounters a missing record. If the record doesn't appear within 10 seconds it resumes the process.</p>
-
-<span id="example-8" class="md-typeset" style="display: block; color: rgba(0, 0, 0, 0.54); font-size: 12.8px; font-weight: bold;">EXAMPLE 8</span>
-```
-@source(type = 'cdc', url = 'jdbc:oracle:thin://localhost:1521/ORCLCDB', username='c##xstrm', password='xs', table.name='DEBEZIUM.sweetproductiontable', operation = 'insert', connector.properties='oracle.outserver.name=DBZXOUT,oracle.pdb=ORCLPDB1' @map(type = 'keyvalue'))
-define stream insertSweetProductionStream (ID int, NAME string, WEIGHT int);
-
-```
-<p style="word-wrap: break-word">In this example, the CDC source connect to an Oracle database and listens for insert queries of sweetproduction table</p>
 

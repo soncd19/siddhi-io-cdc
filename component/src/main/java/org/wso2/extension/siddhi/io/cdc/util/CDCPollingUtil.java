@@ -18,8 +18,8 @@
 
 package org.wso2.extension.siddhi.io.cdc.util;
 
-import org.wso2.extension.siddhi.io.cdc.source.polling.CDCPollingModeException;
 import org.apache.log4j.Logger;
+import org.wso2.extension.siddhi.io.cdc.source.polling.CDCPollingModeException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

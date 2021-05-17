@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.extension.siddhi.io.cdc</groupId>
         <artifactId>siddhi-io-cdc-parent</artifactId>
-        <version>2.0.5</version>
+        <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>siddhi-io-cdc</artifactId>
@@ -41,15 +41,15 @@
         </dependency>
         <dependency>
             <groupId>io.debezium</groupId>
-            <artifactId>debezium-connector-sqlserver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.debezium</groupId>
             <artifactId>debezium-connector-oracle</artifactId>
         </dependency>
         <dependency>
             <groupId>io.debezium</groupId>
             <artifactId>debezium-connector-postgres</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.debezium</groupId>
+            <artifactId>debezium-connector-sqlserver</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
@@ -102,29 +102,15 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>sqljdbc4</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>connect-json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>connect-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>connect-api</artifactId>
         </dependency>
     </dependencies>
     <profiles>
@@ -319,7 +305,7 @@
                             </environmentVariables>
                             <argLine>-Duser.timezone=GMT</argLine>
                             <test>
-                                org.wso2.extension.io.cdc.source.TestCaseOfCDCPollingMode
+                                org.wso2.extension.siddhi.io.cdc.source.TestCaseOfCDCPollingMode
                             </test>
                         </configuration>
                     </plugin>
@@ -402,7 +388,7 @@
                                 <DOCKER_HOST_IP>${docker.container.siddhi-cdc-mssql.ip}</DOCKER_HOST_IP>
                             </environmentVariables>
                             <test>
-                                org.wso2.extension.io.cdc.source.TestCaseOfCDCPollingMode
+                                org.wso2.extension.siddhi.io.cdc.source.TestCaseOfCDCPollingMode
                             </test>
                         </configuration>
                     </plugin>
@@ -491,7 +477,7 @@
                                 <DOCKER_HOST_IP>${docker.container.siddhi-cdc-postgres.ip}</DOCKER_HOST_IP>
                             </environmentVariables>
                             <test>
-                                org.wso2.extension.io.cdc.source.TestCaseOfCDCPollingMode
+                                org.wso2.extension.siddhi.io.cdc.source.TestCaseOfCDCPollingMode
                             </test>
                         </configuration>
                     </plugin>
@@ -523,29 +509,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <markersDirectory>${project.build.directory}/dependencies/dependency-maven-plugin-markers</markersDirectory>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.apache.kafka</groupId>
-                                    <artifactId>connect-runtime</artifactId>
-                                    <outputDirectory>${project.build.directory}/dependencies/connect-runtime</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
@@ -554,25 +517,24 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.siddhi.extension.io.cdc.*,
+                            org.wso2.extension.siddhi.io.cdc.source.*; version="2.0.0",
+                            org.wso2.extension.siddhi.io.cdc.util.*; version="2.0.0"
                         </Export-Package>
                         <Private-Package>
                             com.github.shyiko.*,
                             io.debezium.*,
-                            org.apache.kafka.connect.*,
-                            org.apache.kafka.common.*,
-                            org.apache.kafka.clients.*,
+                            org.apache.kafka.connect*,
+                            org.apache.kafka.common*,
+                            org.apache.kafka.clients*,
+                            com.google.protobuf.*,
+                            org.postgresql.*
                         </Private-Package>
                         <Import-Package>
-                            org.wso2.siddhi.annotation.*;version="${siddhi.import.version.range}",
-                            org.wso2.siddhi.core.*;version="${siddhi.import.version.range}",
-                            org.wso2.siddhi.query.*;version="${siddhi.import.version.range}",
-                            *;resolution:=optional
+                            org.wso2.siddhi.*; version="${siddhi.import.version.range}"
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Include-Resource>
                             META-INF=target/classes/META-INF,
-                            META-INF/services=${project.build.directory}/dependencies/connect-runtime/META-INF/services,
                             {maven-resources}
                         </Include-Resource>
                     </instructions>
@@ -594,10 +556,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-
-
         </plugins>
     </build>
 </project>

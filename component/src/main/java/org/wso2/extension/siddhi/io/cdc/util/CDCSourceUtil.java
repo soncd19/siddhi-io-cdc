@@ -18,7 +18,8 @@
 
 package org.wso2.extension.siddhi.io.cdc.util;
 
-import org.wso2.extension.siddhi.io.cdc.source.listening.InMemoryOffsetBackingStore;
+import org.apache.kafka.connect.storage.FileOffsetBackingStore;
+import org.apache.log4j.Logger;
 import org.wso2.extension.siddhi.io.cdc.source.listening.WrongConfigurationException;
 import org.wso2.siddhi.query.api.exception.SiddhiAppValidationException;
 
@@ -32,11 +33,14 @@ import java.util.regex.Pattern;
  * This class contains Util methods for the CDCSource.
  */
 public class CDCSourceUtil {
+
+    private static final Logger log = Logger.getLogger(CDCSourceUtil.class);
     public static Map<String, Object> getConfigMap(String username, String password, String url, String tableName,
                                                    String historyFileDirectory, String siddhiAppName,
                                                    String siddhiStreamName, int serverID, String serverName,
                                                    String connectorProperties, int cdcSourceHashCode)
             throws WrongConfigurationException {
+
         Map<String, Object> configMap = new HashMap<>();
         String host;
         int port;
@@ -72,11 +76,10 @@ public class CDCSourceUtil {
 
                     //Add other MySQL specific details to configMap.
                     configMap.put(CDCSourceConstants.CONNECTOR_CLASS, CDCSourceConstants.MYSQL_CONNECTOR_CLASS);
+
                     break;
-                }
-                case "postgresql": {
-                    //Extract url details
-                    String regex = "jdbc:postgresql://(\\w*|[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}):" +
+                }case "postgresql": {
+                    String regex = "jdbc:postgresql://(.*|[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}):" +
                             "(\\d++)/(\\w*)";
                     Pattern p = Pattern.compile(regex);
                     Matcher matcher = p.matcher(url);
@@ -158,10 +161,10 @@ public class CDCSourceUtil {
                     configMap.put(CDCSourceConstants.CONNECTOR_CLASS, CDCSourceConstants.ORACLE_CONNECTOR_CLASS);
                     break;
                 }
-                default:
-                    throw new WrongConfigurationException("Unsupported schema. Expected schema: mysql or postgresql" +
-                            "or sqlserver or oracle, Found: " + splittedURL[1]);
-
+                default: {
+                    throw new WrongConfigurationException("Unsupported schema. Expected schema: mysql, Found: "
+                            + splittedURL[1]);
+                }
             }
 
             //Add general config details to configMap
@@ -182,14 +185,16 @@ public class CDCSourceUtil {
                 configMap.put(CDCSourceConstants.DATABASE_SERVER_NAME, serverName);
             }
 
-            configMap.put(CDCSourceConstants.OFFSET_STORAGE, InMemoryOffsetBackingStore.class.getName());
-            configMap.put(CDCSourceConstants.CDC_SOURCE_OBJECT, cdcSourceHashCode);
 
+            configMap.put(CDCSourceConstants.OFFSET_STORAGE, FileOffsetBackingStore.class.getName());
+            configMap.put(CDCSourceConstants.OFFSET_STORAGE_FILE_NAME, historyFileDirectory + "offsets.dat");
+            configMap.put(CDCSourceConstants.CDC_SOURCE_OBJECT, cdcSourceHashCode);
             //set history file path.
             configMap.put(CDCSourceConstants.DATABASE_HISTORY, CDCSourceConstants.DATABASE_HISTORY_FILEBASE_HISTORY);
             configMap.put(CDCSourceConstants.DATABASE_HISTORY_FILE_NAME,
                     historyFileDirectory + siddhiStreamName + ".dat");
 
+            log.info("set history file path");
             //set connector property: name
             configMap.put("name", siddhiAppName + siddhiStreamName);
 
@@ -197,6 +202,7 @@ public class CDCSourceUtil {
             for (Map.Entry<String, String> entry : getConnectorPropertiesMap(connectorProperties).entrySet()) {
                 configMap.put(entry.getKey(), entry.getValue());
             }
+            log.info("config finish");
             return configMap;
         }
     }
@@ -212,8 +218,6 @@ public class CDCSourceUtil {
                 if (keyAndValue.length != 2) {
                     throw new SiddhiAppValidationException("connector.properties input is invalid. Check near :" +
                             keyValuePair);
-                } else {
-                    connectorPropertiesMap.put(keyAndValue[0], keyAndValue[1]);
                 }
             }
         }
@@ -232,4 +236,5 @@ public class CDCSourceUtil {
         }
         return path;
     }
+
 }

@@ -1,0 +1,42 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1621277166031
+Build-Jdk: 1.8.0_251
+Built-By: ADMIN
+Bundle-Contributors: WSO2 Inc
+Bundle-Copyright: WSO2 Inc
+Bundle-Description: WSO2 is an open source application development softw
+ are company focused on providing service-orientedarchitecture solutions
+  for professional developers.
+Bundle-Developers: WSO2 Inc
+Bundle-DocURL: https://docs.wso2.com
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: siddhi-io-cdc
+Bundle-SymbolicName: siddhi-io-cdc
+Bundle-Vendor: WSO2 Inc
+Bundle-Version: 2.0.0
+Created-By: Apache Maven Bundle Plugin
+DynamicImport-Package: *
+Export-Package: org.wso2.extension.siddhi.io.cdc.source;version="2.0.0";
+ uses:="org.wso2.siddhi.annotation,org.wso2.siddhi.annotation.util,org.w
+ so2.siddhi.core.config,org.wso2.siddhi.core.exception,org.wso2.siddhi.c
+ ore.stream.input.source,org.wso2.siddhi.core.util.config,org.wso2.siddh
+ i.core.util.transport",org.wso2.extension.siddhi.io.cdc.source.config;v
+ ersion="2.0.0",org.wso2.extension.siddhi.io.cdc.source.listening;versio
+ n="2.0.0";uses:="org.wso2.extension.siddhi.io.cdc.source,org.wso2.siddh
+ i.core.stream.input.source",org.wso2.extension.siddhi.io.cdc.source.pol
+ ling;version="2.0.0";uses:="org.wso2.siddhi.core.exception,org.wso2.sid
+ dhi.core.stream.input.source,org.wso2.siddhi.core.util.config",org.wso2
+ .extension.siddhi.io.cdc.util;version="2.0.0";uses:="org.wso2.extension
+ .siddhi.io.cdc.source.listening"
+Import-Package: org.wso2.siddhi.annotation;version="[4.2.20,5.0.0)",org.
+ wso2.siddhi.annotation.util;version="[4.2.20,5.0.0)",org.wso2.siddhi.co
+ re.config;version="[4.2.20,5.0.0)",org.wso2.siddhi.core.exception;versi
+ on="[4.2.20,5.0.0)",org.wso2.siddhi.core.stream.input.source;version="[
+ 4.2.20,5.0.0)",org.wso2.siddhi.core.util.config;version="[4.2.20,5.0.0)
+ ",org.wso2.siddhi.core.util.transport;version="[4.2.20,5.0.0)",org.wso2
+ .siddhi.query.api.definition;version="[4.2.20,5.0.0)",org.wso2.siddhi.q
+ uery.api.exception;version="[4.2.20,5.0.0)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+SCM-Revision: 2021-05-17T18:45:36Z
+Tool: Bnd-3.0.0.201509101326

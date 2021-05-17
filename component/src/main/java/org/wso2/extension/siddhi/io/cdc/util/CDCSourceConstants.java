@@ -71,9 +71,7 @@ public class CDCSourceConstants {
     public static final int DEFAULT_POLLING_INTERVAL_SECONDS = 1;
     public static final String DATASOURCE_NAME = "datasource.name";
     public static final String JNDI_RESOURCE = "jndi.resource";
-    public static final String ORACLE_PDB_PROPERTY_NAME = "database.pdb.name";
     public static final String ORACLE_OUTSERVER_PROPERTY_NAME = "database.out.server.name";
-    public static final String WAIT_ON_MISSED_RECORD = "wait.on.missed.record";
-    public static final String MISSED_RECORD_WAITING_TIMEOUT = "missed.record.waiting.timeout";
-    public static final String CONNECTOR_NAME = "name";
+    public static final String ORACLE_PDB_PROPERTY_NAME = "database.pdb.name";
+    public static final String OFFSET_STORAGE_FILE_NAME= "offset.storage.file.filename";
 }

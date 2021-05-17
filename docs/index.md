@@ -1,60 +1,49 @@
-Siddhi IO CDC
-===================
+# Siddhi-io-cdc
 
-  [![Jenkins Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-cdc/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-cdc/)
-  [![GitHub Release](https://img.shields.io/github/release/siddhi-io/siddhi-io-cdc.svg)](https://github.com/siddhi-io/siddhi-io-cdc/releases)
-  [![GitHub Release Date](https://img.shields.io/github/release-date/siddhi-io/siddhi-io-cdc.svg)](https://github.com/siddhi-io/siddhi-io-cdc/releases)
-  [![GitHub Open Issues](https://img.shields.io/github/issues-raw/siddhi-io/siddhi-io-cdc.svg)](https://github.com/siddhi-io/siddhi-io-cdc/issues)
-  [![GitHub Last Commit](https://img.shields.io/github/last-commit/siddhi-io/siddhi-io-cdc.svg)](https://github.com/siddhi-io/siddhi-io-cdc/commits/master)
-  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+The **siddhi-io-cdc extension** is an extension to <a target="_blank" href="https://wso2.github.io/siddhi">Siddhi</a>. It receives change data from MySQL, MS SQL Server, Postgresql, H2 and Oracle in the key-value format.
 
-The **siddhi-io-cdc extension** is an extension to <a target="_blank" href="https://wso2.github.io/siddhi">Siddhi</a> that captures change data from databases such as MySQL, MS SQL, PostgreSQL, H2 and Oracle.
+## Prerequisites
+Default mode (listening):
 
-For information on <a target="_blank" href="https://siddhi.io/">Siddhi</a> and it's features refer <a target="_blank" href="https://siddhi.io/redirect/docs.html">Siddhi Documentation</a>. 
+* The MySQL server should be configured to use a row-level binary log.
+* WSO2 SP State persistence should be enabled.
+* A MySQL user should be created with SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT privileges on the tables he wants to capture changes.
 
-## Download
-
-* Versions 3.x and above with group id `io.siddhi.extension.*` from <a target="_blank" href="https://mvnrepository.com/artifact/io.siddhi.extension.io.cdc/siddhi-io-cdc/">here</a>.
-* Versions 2.x and lower with group id `org.wso2.extension.siddhi.*` from <a target="_blank" href="https://mvnrepository.com/artifact/org.wso2.extension.siddhi.io.cdc/siddhi-io-cdc">here</a>.
-
-## Latest API Docs 
-
-Latest API Docs is <a target="_blank" href="https://siddhi-io.github.io/siddhi-io-cdc/api/2.0.5">2.0.5</a>.
-
-## Features
-
-* <a target="_blank" href="https://siddhi-io.github.io/siddhi-io-cdc/api/2.0.5/#cdc-source">cdc</a> *(<a target="_blank" href="http://siddhi.io/en/v5.1/docs/query-guide/#source">Source</a>)*<br> <div style="padding-left: 1em;"><p><p style="word-wrap: break-word;margin: 0;">The CDC source receives events when change events (i.e., INSERT, UPDATE, DELETE) are triggered for a database table. Events are received in the 'key-value' format.<br><br>There are two modes you could perform CDC: Listening mode and Polling mode.<br><br>In polling mode, the datasource is periodically polled for capturing the changes. The polling period can be configured.<br>In polling mode, you can only capture INSERT and UPDATE changes.<br><br>On listening mode, the Source will keep listening to the Change Log of the database and notify in case a change has taken place. Here, you are immediately notified about the change, compared to polling mode.<br><br>The key values of the map of a CDC change event are as follows.<br><br>For 'listening' mode: <br>&nbsp;&nbsp;&nbsp;&nbsp;For insert: Keys are specified as columns of the table.<br>&nbsp;&nbsp;&nbsp;&nbsp;For delete: Keys are followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>&nbsp;&nbsp;&nbsp;&nbsp;For update: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br><br>For 'polling' mode: Keys are specified as the columns of the table.#### Preparations required for working with Oracle Databases in listening mode<br><br>Using the extension in Windows, Mac OSX and AIX are pretty straight forward inorder to achieve the required behaviour please follow the steps given below<br><br>&nbsp;&nbsp;- Download the compatible version of oracle instantclient for the database version from [here](https://www.oracle.com/database/technologies/instant-client/downloads.html) and extract<br>&nbsp;&nbsp;- Extract and set the environment variable <code>LD_LIBRARY_PATH</code> to the location of instantclient which was exstracted as shown below<br>&nbsp;&nbsp;</p><pre>
-    export LD_LIBRARY_PATH=&lt;path to the instant client location&gt;
-  </pre><p style="word-wrap: break-word;margin: 0;"><br>&nbsp;&nbsp;- Inside the instantclient folder which was download there are two jars <code>xstreams.jar</code> and <code>ojdbc&lt;version&gt;.jar</code> convert them to OSGi bundles using the tools which were provided in the <code>&lt;distribution&gt;/bin</code> for converting the <code>ojdbc.jar</code> use the tool <code>spi-provider.sh|bat</code> and for the conversion of <code>xstreams.jar</code> use the jni-provider.sh as shown below(Note: this way of converting Xstreams jar is applicable only for Linux environments for other OSs this step is not required and converting it through the <code>jartobundle.sh</code> tool is enough)<br>&nbsp;&nbsp;</p><pre>
-    ./jni-provider.sh &lt;input-jar&gt; &lt;destination&gt; &lt;comma seperated native library names&gt;
-  </pre><p style="word-wrap: break-word;margin: 0;"><br>&nbsp;&nbsp;once ojdbc and xstreams jars are converted to OSGi copy the generated jars to the <code>&lt;distribution&gt;/lib</code>. Currently siddhi-io-cdc only supports the oracle database distributions 12 and above<br><br>See parameter: mode for supported databases and change events.</p></p></div>
-
-## Dependencies 
-JDBC connector jar should be added to the runtime. Download the JDBC connector jar based on the database type that is being used.
-
-For MySQL, use connector version 5.1.xx.
-
-In addition to that, there are some prerequisites that need to be met based on the CDC mode used. Please find them below.
-
-**Default mode (Listening mode):**
-
-Currently MySQL, PostgreSQL and SQLServer are supported in Listening Mode.
-To capture the change events, databases have to be configured as shown below.
-
-* MySQL - https://debezium.io/docs/connectors/mysql/#setting-up-mysql
-* PostgreSQL - https://debezium.io/docs/connectors/postgresql/#setting-up-PostgreSQL
-* SQLServer - https://debezium.io/docs/connectors/sqlserver/#setting-up-sqlserver
-
-**Polling mode:**
+Polling mode:
 
 * Change data capturing table should be have a polling column. Auto Incremental column or Timestamp can be used.
 
 Please see API docs for more details about change data capturing modes.
 
-## Installation
+Find some useful links below:
 
-For installing this extension on various siddhi execution environments refer Siddhi documentation section on <a target="_blank" href="https://siddhi.io/redirect/add-extensions.html">adding extensions</a>.
+* <a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-cdc">Source code</a>
+* <a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-cdc/releases">Releases</a>
+* <a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-cdc/issues">Issue tracker</a>
 
+## Latest API Docs
+
+Latest API Docs is <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-cdc/api/2.0.0">2.0.0</a>.
+
+## How to use
+
+ **Using the extension in <a target="_blank" href="https://github.com/wso2/product-sp">WSO2 Stream Processor</a>**
+
+ * You can use this extension with the latest <a target="_blank" href="https://github.com/wso2/product-sp/releases">WSO2 Stream Processor</a> that is a part of the <a target="_blank" href="http://wso2.com/analytics?utm_source=gitanalytics&utm_campaign=gitanalytics_Jul17">WSO2 Analytics</a> offering, with editor, debugger and simulation support.
+
+* This extension is shipped by default with WSO2 Stream Processor. If you need to use an alternative version of this extension, you can replace the component <a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-cdc/releases">jar</a> that can be found in the `<STREAM_PROCESSOR_HOME>/lib` directory.
+
+**Using the extension as a <a target="_blank" href="https://wso2.github.io/siddhi/documentation/running-as-a-java-library">java library</a>**
+
+ * This extension can be added as a maven dependency along with other Siddhi dependencies to your project.
+
+```
+<dependency>
+  <groupId>org.wso2.extension.siddhi.io.cdc</groupId>
+  <artifactId>siddhi-io-cdc</artifactId>
+  <version>x.x.x</version>
+ </dependency>
+```
 ## Running Integration tests in docker containers(Optional)
 
 The CDC functionality are tested with the docker base integration test framework.
@@ -86,11 +75,36 @@ The test framework initialize a docker container with required configuration bef
 
              mvn verify -P local-oracle -Dskip.surefire.test=true
 
-## Support and Contribution
+## Jenkins Build Status
 
-* We encourage users to ask questions and get support via <a target="_blank" href="https://stackoverflow.com/questions/tagged/siddhi">StackOverflow</a>, make sure to add the `siddhi` tag to the issue for better response.
 
-* If you find any issues related to the extension please report them on <a target="_blank" href="https://github.com/siddhi-io/siddhi-execution-string/issues">the issue tracker</a>.
+---
+| Branch | Build Status |
+| :------ |:------------|
+| master  |  [![Build Status](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-cdc/badge/icon)](https://wso2.org/jenkins/job/siddhi/job/siddhi-io-cdc/)  |
 
-* For production support and other contribution related information refer <a target="_blank" href="https://siddhi.io/community/">Siddhi Community</a> documentation.
+## Features
 
+* <a target="_blank" href="https://wso2-extensions.github.io/siddhi-io-cdc/api/2.0.0/#cdc-source">cdc</a> *<a target="_blank" href="http://siddhi.io/documentation/siddhi-5.x/query-guide-5.x/#source">(Source)</a>*<br><div style="padding-left: 1em;"><p>The CDC source receives events when change events (i.e., INSERT, UPDATE, DELETE) are triggered for a database table. Events are received in the 'key-value' format.<br>The key values of the map of a CDC change event are as follows.<br>&nbsp;&nbsp;&nbsp;&nbsp;For insert: Keys are specified as columns of the table.<br>&nbsp;&nbsp;&nbsp;&nbsp;For delete: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>&nbsp;&nbsp;&nbsp;&nbsp;For update: Keys are followed followed by the specified table columns. This is achieved via 'before_'. e.g., specifying 'before_X' results in the key being added before the column named 'X'.<br>For 'polling' mode: Keys are specified as the coloumns of the table.<br>See parameter: mode for supported databases and change events.</p></div>
+
+## How to Contribute
+
+ * Report issues at <a target="_blank" href="https://github.com/wso2-extensions/siddhi-io-cdc/issues">GitHub Issue Tracker</a>.
+
+  * Send your contributions as pull requests to the <a target="_blank" href="https://github
+  .com/wso2-extensions/siddhi-io-cdc/tree/master">master branch</a>.
+
+## Contact us
+
+ * Post your questions with the <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">"Siddhi"</a> tag in <a target="_blank" href="http://stackoverflow.com/search?q=siddhi">Stackoverflow</a>.
+
+ * Siddhi developers can be contacted via the following mailing lists:
+
+    Developers List   : [dev@wso2.org](mailto:dev@wso2.org)
+
+    Architecture List : [architecture@wso2.org](mailto:architecture@wso2.org)
+
+## Support
+ * We are committed to ensuring support for this extension in production. Our unique approach ensures that all support leverages our open development methodology and is provided by the very same engineers who build the technology.
+
+* For more details and to take advantage of this unique opportunity contact us via <a target="_blank" href="http://wso2.com/support?utm_source=gitanalytics&utm_campaign=gitanalytics_Jul17">http://wso2.com/support/</a>.

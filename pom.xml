@@ -29,7 +29,7 @@
     </modules>
     <groupId>org.wso2.extension.siddhi.io.cdc</groupId>
     <artifactId>siddhi-io-cdc-parent</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.0</version>
     <name>Siddhi I/O cdc</name>
     <dependencyManagement>
         <dependencies>
@@ -68,6 +68,7 @@
                 <artifactId>debezium-connector-oracle</artifactId>
                 <version>${debezium-connector-oracle.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.debezium</groupId>
                 <artifactId>debezium-connector-postgres</artifactId>
@@ -78,6 +79,7 @@
                 <artifactId>debezium-connector-sqlserver</artifactId>
                 <version>${debezium-connector-sqlserver.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>com.zaxxer</groupId>
                 <artifactId>HikariCP</artifactId>
@@ -118,10 +120,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>postgresql</groupId>
+                <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
@@ -158,23 +159,6 @@
                 <version>${org.testng.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <!--     Kafka client dependencies       -->
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>connect-json</artifactId>
-                <version>${kafka.connect.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>connect-runtime</artifactId>
-                <version>${kafka.connect.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>connect-api</artifactId>
-                <version>${kafka.connect.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -209,31 +193,18 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.4</version>
                 <configuration>
-                    <!--
-                        Enables analysis which takes more memory but finds more bugs.
-                        If you run out of memory, changes the value of the effort element
-                        to 'Low'.
-                    -->
                     <effort>Max</effort>
-                    <!-- Build fail if problems are found -->
                     <failOnError>false</failOnError>
-                    <!-- Reports all bugs (other values are medium and max) -->
                     <threshold>Low</threshold>
-                    <!-- Produces XML report -->
                     <xmlOutput>true</xmlOutput>
-                    <!-- Configures the directory in which the XML report is created -->
                     <findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
                 </configuration>
                 <executions>
-                    <!--
-                        Ensures that FindBugs inspects source code when project is compiled.
-                    -->
                     <execution>
                         <id>analyze-compile</id>
                         <phase>compile</phase>
@@ -247,27 +218,26 @@
         </plugins>
     </build>
     <properties>
-        <siddhi.version>4.4.8</siddhi.version>
-        <siddhi.import.version.range>[4.0.0, 5.0.0)</siddhi.import.version.range>
+        <siddhi.version>4.5.8</siddhi.version>
+        <siddhi.import.version.range>[4.2.20, 5.0.0)</siddhi.import.version.range>
         <log4j.version>1.2.17.wso2v1</log4j.version>
         <carbon.transport.version>4.4.15</carbon.transport.version>
         <siddhi-map-keyvalue.version>1.1.2</siddhi-map-keyvalue.version>
         <jacoco.plugin.version>0.7.9</jacoco.plugin.version>
-        <mysql-binlog-connector-java.version>0.13.0</mysql-binlog-connector-java.version>
-        <debezium-connector-mysql.version>0.10.0.Final</debezium-connector-mysql.version>
-        <debezium-embedded.version>0.10.0.Final</debezium-embedded.version>
-        <debezium-connector-oracle.version>0.10.0.Final</debezium-connector-oracle.version>
-        <debezium-connector-postgres.version>1.2.3.Final</debezium-connector-postgres.version>
-        <debezium-connector-sqlserver.version>0.10.0.Final</debezium-connector-sqlserver.version>
-        <version.oracle.driver>12.1.0.2</version.oracle.driver>
+        <mysql-binlog-connector-java.version>0.20.0</mysql-binlog-connector-java.version>
+        <debezium-connector-mysql.version>1.0.3.Final</debezium-connector-mysql.version>
+        <debezium-embedded.version>1.0.3.Final</debezium-embedded.version>
+        <debezium-connector-oracle.version>1.0.3.Final</debezium-connector-oracle.version>
+        <debezium-connector-sqlserver.version>1.0.3.Final</debezium-connector-sqlserver.version>
+        <debezium-connector-postgres.version>1.0.3.Final</debezium-connector-postgres.version>
         <hikari.version>3.2.0</hikari.version>
         <org.testng.version>6.11</org.testng.version>
         <siddhi-store-rdbms.version>5.1.7</siddhi-store-rdbms.version>
-        <carbon.datasource.core.version>RELEASE</carbon.datasource.core.version>
+        <carbon.datasource.core.version>1.1.4</carbon.datasource.core.version>
         <mavan.findbugsplugin.exclude.file>../findbugs-exclude.xml</mavan.findbugsplugin.exclude.file>
         <ojdbc6.version>12.1.0.1-atlassian-hosted</ojdbc6.version>
         <sqljdbc4.version>4.0</sqljdbc4.version>
-        <postgresql.version>RELEASE</postgresql.version>
+        <postgresql.version>42.2.18</postgresql.version>
         <h2.connector.version>1.4.187</h2.connector.version>
         <siddhi-cdc-mysql.port>3309</siddhi-cdc-mysql.port>
         <docker.container.siddhi-cdc-mysql.ip>0.0.0.0</docker.container.siddhi-cdc-mysql.ip>
@@ -277,13 +247,11 @@
         <docker.container.siddhi-cdc-mssql.ip>0.0.0.0</docker.container.siddhi-cdc-mssql.ip>
         <siddhi-cdc-postgres.port>5433</siddhi-cdc-postgres.port>
         <docker.container.siddhi-cdc-postgres.ip>0.0.0.0</docker.container.siddhi-cdc-postgres.ip>
-        <oracle.jdbc.Driver.version>12.2.0.1</oracle.jdbc.Driver.version>
-        <kafka.connect.version>2.3.0</kafka.connect.version>
     </properties>
     <scm>
-        <url>https://github.com/siddhi-io/siddhi-io-cdc.git</url>
-        <developerConnection>scm:git:https://github.com/siddhi-io/siddhi-io-cdc.git</developerConnection>
-        <connection>scm:git:https://github.com/siddhi-io/siddhi-io-cdc.git</connection>
-        <tag>v2.0.5</tag>
+        <url>https://github.com/wso2-extensions/siddhi-io-cdc.git</url>
+        <developerConnection>scm:git:https://github.com/wso2-extensions/siddhi-io-cdc.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2-extensions/siddhi-io-cdc.git</connection>
+        <tag>v2.0.0</tag>
     </scm>
 </project>

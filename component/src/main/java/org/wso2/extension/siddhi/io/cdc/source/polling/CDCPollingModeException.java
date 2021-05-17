@@ -18,6 +18,7 @@
 
 package org.wso2.extension.siddhi.io.cdc.source.polling;
 
+
 import org.wso2.siddhi.core.exception.SiddhiAppCreationException;
 
 /**
