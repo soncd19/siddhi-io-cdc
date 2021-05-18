@@ -74,4 +74,7 @@ public class CDCSourceConstants {
     public static final String ORACLE_OUTSERVER_PROPERTY_NAME = "database.out.server.name";
     public static final String ORACLE_PDB_PROPERTY_NAME = "database.pdb.name";
     public static final String OFFSET_STORAGE_FILE_NAME= "offset.storage.file.filename";
+    public static final String PLUGIN_NAME = "plugin.name";
+    public static final String PUBLIC = "public.";
+    public static final String PG_OUTPUT = "pgoutput";
 }

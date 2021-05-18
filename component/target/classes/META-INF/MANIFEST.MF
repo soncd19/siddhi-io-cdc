@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1621277166031
-Build-Jdk: 1.8.0_251
-Built-By: ADMIN
+Bnd-LastModified: 1621332930444
+Build-Jdk: 1.8.0_281
+Built-By: soncd
 Bundle-Contributors: WSO2 Inc
 Bundle-Copyright: WSO2 Inc
 Bundle-Description: WSO2 is an open source application development softw
@@ -38,5 +38,5 @@ Import-Package: org.wso2.siddhi.annotation;version="[4.2.20,5.0.0)",org.
  .siddhi.query.api.definition;version="[4.2.20,5.0.0)",org.wso2.siddhi.q
  uery.api.exception;version="[4.2.20,5.0.0)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
-SCM-Revision: 2021-05-17T18:45:36Z
+SCM-Revision: e83f811aa96b4c52a7df849cd52ab19ca77f9193
 Tool: Bnd-3.0.0.201509101326

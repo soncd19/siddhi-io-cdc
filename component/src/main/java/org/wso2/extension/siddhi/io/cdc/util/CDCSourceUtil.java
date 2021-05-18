@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 public class CDCSourceUtil {
 
     private static final Logger log = Logger.getLogger(CDCSourceUtil.class);
+
     public static Map<String, Object> getConfigMap(String username, String password, String url, String tableName,
                                                    String historyFileDirectory, String siddhiAppName,
                                                    String siddhiStreamName, int serverID, String serverName,
@@ -78,7 +79,8 @@ public class CDCSourceUtil {
                     configMap.put(CDCSourceConstants.CONNECTOR_CLASS, CDCSourceConstants.MYSQL_CONNECTOR_CLASS);
 
                     break;
-                }case "postgresql": {
+                }
+                case "postgresql": {
                     String regex = "jdbc:postgresql://(.*|[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}):" +
                             "(\\d++)/(\\w*)";
                     Pattern p = Pattern.compile(regex);
@@ -97,7 +99,8 @@ public class CDCSourceUtil {
                     configMap.put(CDCSourceConstants.DATABASE_HOSTNAME, host);
                     configMap.put(CDCSourceConstants.DATABASE_PORT, port);
                     configMap.put(CDCSourceConstants.DATABASE_DBNAME, database);
-                    configMap.put(CDCSourceConstants.TABLE_WHITELIST, tableName);
+                    configMap.put(CDCSourceConstants.TABLE_WHITELIST, CDCSourceConstants.PUBLIC + tableName);
+                    configMap.put(CDCSourceConstants.PLUGIN_NAME, CDCSourceConstants.PG_OUTPUT);
 
                     //Add other PostgreSQL specific details to configMap.
                     configMap.put(CDCSourceConstants.CONNECTOR_CLASS, CDCSourceConstants.POSTGRESQL_CONNECTOR_CLASS);
