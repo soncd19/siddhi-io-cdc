@@ -19,6 +19,7 @@
 package org.wso2.extension.siddhi.io.cdc.source;
 
 import io.debezium.embedded.EmbeddedEngine;
+import io.debezium.engine.DebeziumEngine;
 import org.apache.log4j.Logger;
 import org.wso2.extension.siddhi.io.cdc.source.listening.CDCSourceObjectKeeper;
 import org.wso2.extension.siddhi.io.cdc.source.listening.ChangeDataCapture;
@@ -406,6 +407,7 @@ public class CDCSource extends Source {
 
                 EmbeddedEngine engine = changeDataCapture.getEngine(completionCallback);
                 executorService.execute(engine);
+
                 break;
             case CDCSourceConstants.MODE_POLLING:
                 //create a completion callback to handle exceptions from CDCPoller
@@ -419,6 +421,7 @@ public class CDCSource extends Source {
                         throw new SiddhiAppRuntimeException("CDC Polling mode run failed.", error);
                     }
                 };
+
 
                 cdcPoller.setCompletionCallback(cdcCompletionCallback);
                 executorService.execute(cdcPoller);
@@ -530,59 +533,33 @@ public class CDCSource extends Source {
 
     @Override
     public Map<String, Object> currentState() {
-        return null;
+        Map<String, Object> currentState = new HashMap<>();
+        switch (mode) {
+            case CDCSourceConstants.MODE_POLLING:
+                currentState.put("last.offset", cdcPoller.getLastReadPollingColumnValue());
+                break;
+            case CDCSourceConstants.MODE_LISTENING:
+                currentState.put(CDCSourceConstants.CACHE_OBJECT, offsetData);
+                break;
+            default:
+                break;
+        }
+        return currentState;
     }
 
     @Override
     public void restoreState(Map<String, Object> map) {
-
+        switch (mode) {
+            case CDCSourceConstants.MODE_POLLING:
+                Object lastOffsetObj = map.get("last.offset");
+                cdcPoller.setLastReadPollingColumnValue((String) lastOffsetObj);
+                break;
+            case CDCSourceConstants.MODE_LISTENING:
+                Object cacheObj = map.get(CDCSourceConstants.CACHE_OBJECT);
+                this.offsetData = (HashMap<byte[], byte[]>) cacheObj;
+                break;
+            default:
+                break;
+        }
     }
-
-//    class CdcState extends State {
-//
-//        private final String mode;
-//
-//        private final Map<String, Object> state;
-//
-//        private CdcState(String mode) {
-//            this.mode = mode;
-//            state = new HashMap<>();
-//        }
-//
-//        @Override
-//        public boolean canDestroy() {
-//            return false;
-//        }
-//
-//        @Override
-//        public Map<String, Object> snapshot() {
-//            switch (mode) {
-//                case CDCSourceConstants.MODE_POLLING:
-//                    state.put("last.offset", cdcPoller.getLastReadPollingColumnValue());
-//                    break;
-//                case CDCSourceConstants.MODE_LISTENING:
-//                    state.put(CDCSourceConstants.CACHE_OBJECT, offsetData);
-//                    break;
-//                default:
-//                    break;
-//            }
-//            return state;
-//        }
-//
-//        @Override
-//        public void restore(Map<String, Object> map) {
-//            switch (mode) {
-//                case CDCSourceConstants.MODE_POLLING:
-//                    Object lastOffsetObj = map.get("last.offset");
-//                    cdcPoller.setLastReadPollingColumnValue((String) lastOffsetObj);
-//                    break;
-//                case CDCSourceConstants.MODE_LISTENING:
-//                    Object cacheObj = map.get(CDCSourceConstants.CACHE_OBJECT);
-//                    offsetData = (HashMap<byte[], byte[]>) cacheObj;
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-//    }
 }

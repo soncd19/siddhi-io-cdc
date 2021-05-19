@@ -71,6 +71,7 @@ public class ChangeDataCapture {
      */
     public EmbeddedEngine getEngine(EmbeddedEngine.CompletionCallback completionCallback) {
         // Create and return Engine with above set configuration ...
+
         EmbeddedEngine.Builder builder = EmbeddedEngine.create()
                 .using(OffsetCommitPolicy.always())
                 .using(completionCallback)

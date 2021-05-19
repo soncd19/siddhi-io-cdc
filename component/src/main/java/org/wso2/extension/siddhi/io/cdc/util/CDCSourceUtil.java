@@ -188,7 +188,6 @@ public class CDCSourceUtil {
                 configMap.put(CDCSourceConstants.DATABASE_SERVER_NAME, serverName);
             }
 
-
             configMap.put(CDCSourceConstants.OFFSET_STORAGE, FileOffsetBackingStore.class.getName());
             configMap.put(CDCSourceConstants.OFFSET_STORAGE_FILE_NAME, historyFileDirectory + "offsets.dat");
             configMap.put(CDCSourceConstants.CDC_SOURCE_OBJECT, cdcSourceHashCode);

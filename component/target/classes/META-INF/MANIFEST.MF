@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1621332930444
+Bnd-LastModified: 1621396106572
 Build-Jdk: 1.8.0_281
 Built-By: soncd
 Bundle-Contributors: WSO2 Inc
@@ -38,5 +38,5 @@ Import-Package: org.wso2.siddhi.annotation;version="[4.2.20,5.0.0)",org.
  .siddhi.query.api.definition;version="[4.2.20,5.0.0)",org.wso2.siddhi.q
  uery.api.exception;version="[4.2.20,5.0.0)"
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
-SCM-Revision: e83f811aa96b4c52a7df849cd52ab19ca77f9193
+SCM-Revision: cf8baeefbc8c6c9fb16b0ee0f1cae1af62c7bc33
 Tool: Bnd-3.0.0.201509101326
